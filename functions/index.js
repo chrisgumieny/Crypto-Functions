@@ -12,15 +12,28 @@ exports.app = functions.https.onRequest(app);
 const docref = db.collection("users");
 
 app.post("/newuser", async (req, res) => {
-    const {userid, useremail, userphonenumber} = req.body
+    const {userid, useremail, userphonenumber, usersubscriptionstatus} = req.body
     const results = await docref.add({
         userid,
         useremail,
-        userphonenumber
+        userphonenumber,
+        usersubscriptionstatus
       });
       
   res.send(results);
 });
+
+// first attempt at specifically calling backend for updating subscription status
+// (not sure if this is correct)
+
+/*app.post("/updatesubscriptionstatus", async (req, res) => {
+  const {currentuseremail, subscriptionstatus} = req.body
+  const status = await docref.where("useremail", "==", currentuseremail).update({
+    usersubscriptionstatus: subscriptionstatus
+  });
+    
+res.send(status);
+});*/
 
 app.get("/health", (req, res) => {
     res.send("Endpoint is Healthy!");
